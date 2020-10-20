@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import DisplayQuote from "./components/DisplayQuote";
+import Axios from "axios";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const simpsonTest = {
+  character: "Toto",
+  quote: "Salut les blaireaux",
+  image:
+    "https://www.journaldemickey.com/sites/default/files/styles/large/public/actualites/Toto2.jpg?itok=HrhXUjYA",
+};
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      simpson: simpsonTest,
+    };
+    this.getSimpson = this.getSimpson.bind(this);
+  }
+
+  getSimpson() {
+    Axios.get("https://simpsons-quotes-api.herokuapp.com/quotes")
+      .then((response) => response.data)
+      .then((data) => {
+        this.setState({
+          simpson: data[0],
+        });
+      });
+  }
+
+  render() {
+    return (
+      <div className='App'>
+        <DisplayQuote simpson={this.state.simpson} />
+        <button type='button' onClick={this.getSimpson}>
+          Nouvelle citation
+        </button>
+      </div>
+    );
+  }
 }
 
 export default App;
